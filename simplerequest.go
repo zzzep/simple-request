@@ -1,4 +1,4 @@
-package main
+package simplerequest
 
 import (
 	"io/ioutil"
