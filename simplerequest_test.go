@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestExample(t *testing.T) {
-	code, resp, err := get("http://example.com")
+	code, resp, err := Get("http://example.com")
 	if err != nil {
 		t.Error(err)
 	}
