@@ -11,7 +11,7 @@ func TestExample(t *testing.T) {
 		t.Error("wrong status code")
 		t.Error(code)
 	}
-	if resp == nil {
+	if resp == "" {
 		t.Error("nil response")
 	}
 }

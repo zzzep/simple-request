@@ -6,16 +6,18 @@ import (
 	"net/http"
 )
 
-func Get(url string) (code int, body interface{}, err error) {
-	resp, err := http.Get(url)
-	if err != nil {
-		return 0, nil, err
+func Get(url string) (c int, b string, e error) {
+	resp, e := http.Get(url)
+	if e != nil {
+		return 0, "", e
 	}
 
-	body, err = ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
+	body, e := ioutil.ReadAll(resp.Body)
+	if e != nil {
+		log.Fatalln(e)
 	}
 
-	return resp.StatusCode, body, nil
+	b = string(body)
+
+	return resp.StatusCode, b, nil
 }
