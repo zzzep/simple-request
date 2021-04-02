@@ -3,15 +3,16 @@ package simplerequest
 import "testing"
 
 func TestExample(t *testing.T) {
-	code, resp, err := Get("http://example.com")
-	if err != nil {
-		t.Error(err)
-	}
-	if code != 200 {
+	code, resp := Get("http://example.com")
+	if code != OK {
 		t.Error("wrong status code")
 		t.Error(code)
 	}
 	if resp == "" {
 		t.Error("nil response")
+	}
+
+	if lastErr != nil {
+		t.Error(lastErr)
 	}
 }

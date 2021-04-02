@@ -2,22 +2,23 @@ package simplerequest
 
 import (
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
-func Get(url string) (c int, b string, e error) {
+const InternalServerError = 500
+const OK = 200
+
+var lastErr error
+
+func Get(url string) (int, string) {
 	resp, e := http.Get(url)
 	if e != nil {
-		return 0, "", e
+		lastErr = e
+		return InternalServerError, "Fail to do the requisition"
 	}
-
-	body, e := ioutil.ReadAll(resp.Body)
-	if e != nil {
-		log.Fatalln(e)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		lastErr = e
 	}
-
-	b = string(body)
-
-	return resp.StatusCode, b, nil
+	return resp.StatusCode, string(body)
 }
