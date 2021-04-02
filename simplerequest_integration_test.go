@@ -1,6 +1,12 @@
+//+build --tag=no-build
+
 package simplerequest
 
 import "testing"
+
+type responseGetJson struct {
+	Success string `json:"success"`
+}
 
 func TestExample(t *testing.T) {
 	code, resp := Get("http://example.com")
@@ -11,20 +17,14 @@ func TestExample(t *testing.T) {
 	if resp == "" {
 		t.Error("nil response")
 	}
-
 	if lastErr != nil {
 		t.Error(lastErr)
 	}
 }
 
-type responseGetJson struct {
-	Success string `json:"success"`
-}
-
 func TestGetToJson(t *testing.T) {
 	var r responseGetJson
 	c := GetToJson("https://reqbin.com/echo/get/json", &r)
-
 	if r.Success != "true" {
 		t.Error("r.success", r.Success, "is not true")
 	}
