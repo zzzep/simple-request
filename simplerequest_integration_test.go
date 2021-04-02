@@ -16,3 +16,19 @@ func TestExample(t *testing.T) {
 		t.Error(lastErr)
 	}
 }
+
+type responseGetJson struct {
+	Success string `json:"success"`
+}
+
+func TestGetToJson(t *testing.T) {
+	var r responseGetJson
+	c := GetToJson("https://reqbin.com/echo/get/json", &r)
+
+	if r.Success != "true" {
+		t.Error("r.success", r.Success, "is not true")
+	}
+	if c != 200 {
+		t.Error("Status code invalid")
+	}
+}
