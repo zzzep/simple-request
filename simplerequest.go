@@ -69,6 +69,42 @@ func PostH(u string, h map[string][]string, payload string) (int, string, map[st
 	return resp.StatusCode, string(body), resp.Header
 }
 
+func PutH(u string, h map[string][]string, payload string) (int, string, map[string][]string) {
+	var hr map[string][]string
+	request, _ := http.NewRequest(http.MethodPut, u, strings.NewReader(payload))
+	request.Header = h
+	client := http.Client{}
+
+	resp, e := client.Do(request)
+	if e != nil {
+		lastErr = e
+		return InternalServerError, "Fail to do the requisition", hr
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	_ = resp.Body.Close()
+	if err != nil {
+		lastErr = e
+	}
+	return resp.StatusCode, string(body), resp.Header
+}
+
+func Put(u string, payload string) (int, string) {
+	request, _ := http.NewRequest(http.MethodPut, u, strings.NewReader(payload))
+	client := http.Client{}
+
+	resp, e := client.Do(request)
+	if e != nil {
+		lastErr = e
+		return InternalServerError, "Fail to do the requisition"
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	_ = resp.Body.Close()
+	if err != nil {
+		lastErr = e
+	}
+	return resp.StatusCode, string(body)
+}
+
 func Post(u string, body map[string][]string) (int, string) {
 	data := url.Values(body)
 	resp, err := http.PostForm(u, data)

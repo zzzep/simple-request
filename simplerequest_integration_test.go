@@ -72,6 +72,38 @@ func TestPostWithHeaderExample(t *testing.T) {
 	}
 }
 
+func TestPutExample(t *testing.T) {
+	code, resp := Put("https://reqbin.com/echo/put/json", "body")
+	if code != OK {
+		t.Error("wrong status code")
+		t.Error(code)
+	}
+	if resp == "" {
+		t.Error("nil response")
+	}
+	if lastErr != nil {
+		t.Error(lastErr)
+	}
+}
+
+func TestPutWithHeaderExample(t *testing.T) {
+	header := map[string][]string{"teste": {"teste123"}}
+	code, resp, h := PutH("https://reqbin.com/echo/put/json", header, "")
+	if code != OK {
+		t.Error("wrong status code")
+		t.Error(code)
+	}
+	if _, ok := h["Date"]; !ok {
+		t.Error("fail to get header")
+	}
+	if resp == "" {
+		t.Error("nil response")
+	}
+	if lastErr != nil {
+		t.Error(lastErr)
+	}
+}
+
 func TestGetToJson(t *testing.T) {
 	var r responseGetJson
 	c := GetToJson("https://reqbin.com/echo/get/json", &r)
