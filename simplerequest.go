@@ -28,6 +28,22 @@ func Get(u string) (int, string) {
 	return resp.StatusCode, string(body)
 }
 
+func GetH(u string, h map[string]string) (int, string, map[string]string) {
+	var hr map[string]string
+	resp, e := http.Get(u)
+	if e != nil {
+		lastErr = e
+		return InternalServerError, "Fail to do the requisition", hr
+	}
+	hr = convertHeader(resp.Header)
+	body, err := ioutil.ReadAll(resp.Body)
+	_ = resp.Body.Close()
+	if err != nil {
+		lastErr = e
+	}
+	return resp.StatusCode, string(body), hr
+}
+
 func Post(u string, body map[string][]string) (int, string) {
 	data := url.Values(body)
 	resp, err := http.PostForm(u, data)
@@ -54,4 +70,12 @@ func GetToJson(u string, response BaseResponse) int {
 		lastErr = e
 	}
 	return c
+}
+
+func convertHeader(h map[string][]string) map[string]string {
+	hr := make(map[string]string, len(h))
+	for key, header := range h {
+		hr[key] = header[0]
+	}
+	return hr
 }

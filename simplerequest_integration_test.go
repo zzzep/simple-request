@@ -1,6 +1,8 @@
 package simplerequest
 
-import "testing"
+import (
+	"testing"
+)
 
 type responseGetJson struct {
 	Success string `json:"success"`
@@ -11,6 +13,23 @@ func TestExample(t *testing.T) {
 	if code != OK {
 		t.Error("wrong status code")
 		t.Error(code)
+	}
+	if resp == "" {
+		t.Error("nil response")
+	}
+	if lastErr != nil {
+		t.Error(lastErr)
+	}
+}
+
+func TestExampleWithHeader(t *testing.T) {
+	code, resp, h := GetH("http://example.com", map[string]string{})
+	if code != OK {
+		t.Error("wrong status code")
+		t.Error(code)
+	}
+	if _, ok := h["Date"]; !ok {
+		t.Error("fail to get header")
 	}
 	if resp == "" {
 		t.Error("nil response")
