@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 const InternalServerError = 500
@@ -31,7 +32,7 @@ func Get(u string) (int, string) {
 func GetH(u string, h map[string]string) (int, string, map[string]string) {
 	var hr map[string]string
 	hToS := headerToMulti(h)
-	request, _ := http.NewRequest("GET", u, nil)
+	request, _ := http.NewRequest(http.MethodGet, u, nil)
 	request.Header = hToS
 	client := http.Client{}
 
@@ -47,6 +48,25 @@ func GetH(u string, h map[string]string) (int, string, map[string]string) {
 		lastErr = e
 	}
 	return resp.StatusCode, string(body), hr
+}
+
+func PostH(u string, h map[string][]string, payload string) (int, string, map[string][]string) {
+	var hr map[string][]string
+	request, _ := http.NewRequest(http.MethodPost, u, strings.NewReader(payload))
+	request.Header = h
+	client := http.Client{}
+
+	resp, e := client.Do(request)
+	if e != nil {
+		lastErr = e
+		return InternalServerError, "Fail to do the requisition", hr
+	}
+	body, err := ioutil.ReadAll(resp.Body)
+	_ = resp.Body.Close()
+	if err != nil {
+		lastErr = e
+	}
+	return resp.StatusCode, string(body), resp.Header
 }
 
 func Post(u string, body map[string][]string) (int, string) {
