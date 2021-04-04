@@ -30,12 +30,17 @@ func Get(u string) (int, string) {
 
 func GetH(u string, h map[string]string) (int, string, map[string]string) {
 	var hr map[string]string
-	resp, e := http.Get(u)
+	hToS := headerToMulti(h)
+	request, _ := http.NewRequest("GET", u, nil)
+	request.Header = hToS
+	client := http.Client{}
+
+	resp, e := client.Do(request)
 	if e != nil {
 		lastErr = e
 		return InternalServerError, "Fail to do the requisition", hr
 	}
-	hr = convertHeader(resp.Header)
+	hr = headerToUnified(resp.Header)
 	body, err := ioutil.ReadAll(resp.Body)
 	_ = resp.Body.Close()
 	if err != nil {
@@ -72,10 +77,18 @@ func GetToJson(u string, response BaseResponse) int {
 	return c
 }
 
-func convertHeader(h map[string][]string) map[string]string {
+func headerToUnified(h map[string][]string) map[string]string {
 	hr := make(map[string]string, len(h))
 	for key, header := range h {
 		hr[key] = header[0]
+	}
+	return hr
+}
+
+func headerToMulti(h map[string]string) map[string][]string {
+	hr := make(map[string][]string, len(h))
+	for key, header := range h {
+		hr[key][0] = header
 	}
 	return hr
 }
