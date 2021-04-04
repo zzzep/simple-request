@@ -56,7 +56,7 @@ func TestPostExample(t *testing.T) {
 
 func TestPostWithHeaderExample(t *testing.T) {
 	header := map[string][]string{"teste": {"teste123"}}
-	code, resp, h := PostH("https://reqbin.com/echo/post/json", header, "")
+	code, h, resp := PostH("https://reqbin.com/echo/post/json", header, "")
 	if code != OK {
 		t.Error("wrong status code")
 		t.Error(code)
@@ -88,7 +88,7 @@ func TestPutExample(t *testing.T) {
 
 func TestPutWithHeaderExample(t *testing.T) {
 	header := map[string][]string{"teste": {"teste123"}}
-	code, resp, h := PutH("https://reqbin.com/echo/put/json", header, "")
+	code, h, resp := PutH("https://reqbin.com/echo/put/json", header, "")
 	if code != OK {
 		t.Error("wrong status code")
 		t.Error(code)
